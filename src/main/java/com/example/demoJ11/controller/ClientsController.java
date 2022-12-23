@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/clients")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ClientsController {
 
     private final ClientRepository clientRepository;
@@ -20,26 +21,23 @@ public class ClientsController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:3000")
+
     public List<Client> getClients() {
         return clientRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public Client getClient(@PathVariable Long id) {
         return clientRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @PostMapping
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity createClient(@RequestBody Client client) throws URISyntaxException {
         Client savedClient = clientRepository.save(client);
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
 
     @PutMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Client client) {
         Client currentClient = clientRepository.findById(id).orElseThrow(RuntimeException::new);
         currentClient.setName(client.getName());
@@ -50,7 +48,6 @@ public class ClientsController {
     }
 
     @DeleteMapping("/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity deleteClient(@PathVariable Long id) {
         clientRepository.deleteById(id);
         return ResponseEntity.ok().build();
